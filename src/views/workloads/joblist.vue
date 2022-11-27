@@ -30,14 +30,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="镜像" width="150" align="center">
-        <template slot-scope="scope">
-          <p>{{ scope.row.Images }}</p>
-          <p>副本:<span class="green">{{ scope.row.Replicas[0] }}</span>/
-            <span>{{ scope.row.Replicas[1] }}</span>/
-            <span class="red">{{ scope.row.Replicas[2] }}</span></p>
-        </template>
-      </el-table-column>
+
       <el-table-column label="创建时间" width="170" align="center">
         <template slot-scope="scope">
           {{ scope.row.CreateTime }}
