@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { getList } from '@/api/deployments'
+import {getJobList} from '@/api/jobs'
 import { NewClient } from '@/utils/ws'
 
 export default {
@@ -59,15 +59,19 @@ export default {
     fetchData() {
       this.listLoading = true
       // 通过rest api 获取
-      getList('default').then(response => {
+      getJobList('default').then(response => {
         this.list = response.data
         this.listLoading = false
       })
       this.wsClient = NewClient()
       this.wsClient.onmessage = (e)=>{
-        if(e.data !== 'ping'){
-          this.list = JSON.parse(e.data)
-          this.$forceUpdate()
+        if (e.data !== 'ping') {
+          const object = JSON.parse(e.data)
+          if (object.type === 'jobs') {
+            this.list = object.result.data
+            this.$forceUpdate()
+          }
+
         }
       }
 

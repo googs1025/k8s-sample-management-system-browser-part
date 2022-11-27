@@ -71,7 +71,7 @@ export const constantRoutes = [
       {
         path: 'services',
         name: 'Services',
-        component: () => import('@/views/workloads/svclist'),
+        component: () => import('@/views/discovery/svclist'),
         meta: { title: 'Service列表', icon: 'tree' }
       },
       {
@@ -88,7 +88,21 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/discovery',
+    component: Layout,
+    redirect: '/discovery/table',
+    name: 'Example',
+    meta: { title: '服务发现', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'services',
+        name: 'Services',
+        component: () => import('@/views/discovery/svclist'),
+        meta: { title: 'Service列表', icon: 'table' }
+      }
+    ]
+  },
   {
     path: '/form',
     component: Layout,

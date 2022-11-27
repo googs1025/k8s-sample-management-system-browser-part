@@ -49,9 +49,8 @@
 </template>
 
 <script>
-import { getServiceList } from '@/api/services'
+import { getList } from '@/api/services'
 import { NewClient } from '@/utils/ws'
-
 
 export default {
   data() {
@@ -68,12 +67,12 @@ export default {
     fetchData() {
       this.listLoading = true
       // 通过rest api 获取
-      getServiceList('default').then(response => {
+      getList('default').then(response => {
         this.list = response.data
         this.listLoading = false
       })
       this.wsClient = NewClient()
-      this.wsClient.onmessage = (e)=>{
+      this.wsClient.onmessage = (e)=> {
         if (e.data !== 'ping') {
           const object = JSON.parse(e.data)
           if (object.type === 'services') {
@@ -84,7 +83,7 @@ export default {
         }
       }
 
-    }
+    },
   },
 
 }

@@ -71,10 +71,14 @@ export default {
         this.listLoading = false
       })
       this.wsClient = NewClient()
-      this.wsClient.onmessage = (e)=>{
-        if(e.data !== 'ping'){
-          this.list = JSON.parse(e.data)
-          this.$forceUpdate()
+      this.wsClient.onmessage = (e)=> {
+        if (e.data !== 'ping') {
+          const object = JSON.parse(e.data)
+          if (object.type === 'deployments') {
+            this.list = object.result.data
+            this.$forceUpdate()
+          }
+
         }
       }
 
