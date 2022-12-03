@@ -75,17 +75,29 @@ export const constantRoutes = [
       //   meta: { title: 'Service列表', icon: 'tree' }
       // },
       {
-        path: 'pods',
-        name: 'Pods',
-        component: () => import('@/views/workloads/podlist'),
-        meta: { title: 'Pod列表', icon: 'tree' }
+        path: 'statefulset',
+        name: 'StatefulSets',
+        component: () => import('@/views/workloads/statefulsetlist'),
+        meta: { title: 'StatefulSet列表', icon: 'table' }
+      },
+      {
+        path: 'cronjobs',
+        name: 'CronJobs',
+        component: () => import('@/views/workloads/cronjoblist'),
+        meta: { title: 'CronJobs列表', icon: 'table' }
       },
       {
         path: 'jobs',
         name: 'Jobs',
         component: () => import('@/views/workloads/joblist'),
         meta: { title: 'Job列表', icon: 'tree' }
-      }
+      },
+      {
+        path: 'pods',
+        name: 'Pods',
+        component: () => import('@/views/workloads/podlist'),
+        meta: { title: 'Pod列表', icon: 'tree' }
+      },
     ]
   },
   {

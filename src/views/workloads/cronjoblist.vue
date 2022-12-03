@@ -13,15 +13,14 @@
           {{ scope.$index+1 }}
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="100">
-        <template slot-scope="scope">
-          <p v-html="getStatus(scope.row)"></p>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="状态" width="100">-->
+<!--        <template slot-scope="scope">-->
+<!--          <p v-html="getStatus(scope.row)"></p>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="名称" width="350">
         <template slot-scope="scope">
           <p>{{ scope.row.Name }}</p>
-          <p class="red">{{ getMessage(scope.row) }}</p>
         </template>
       </el-table-column>
       <el-table-column label="镜像" width="150" align="center">
@@ -34,8 +33,11 @@
           <span>{{ scope.row.NameSpace }}</span>
         </template>
       </el-table-column>
-
-
+      <el-table-column label="上次执行时间" width="170" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.LastScheduleTime }}
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" width="170" align="center">
         <template slot-scope="scope">
           {{ scope.row.CreateTime }}
@@ -46,7 +48,7 @@
 </template>
 
 <script>
-import {getJobList} from '@/api/jobs'
+import {getCronJobList} from '@/api/cronjob'
 import { NewClient } from '@/utils/ws'
 
 export default {
@@ -64,7 +66,7 @@ export default {
     fetchData() {
       this.listLoading = true
       // 通过rest api 获取
-      getJobList('default').then(response => {
+      getCronJobList('default').then(response => {
         this.list = response.data
         this.listLoading = false
       })
@@ -72,7 +74,7 @@ export default {
       this.wsClient.onmessage = (e)=>{
         if (e.data !== 'ping') {
           const object = JSON.parse(e.data)
-          if (object.type === 'jobs') {
+          if (object.type === 'cronjobs') {
             this.list = object.result.data
             this.$forceUpdate()
           }
@@ -80,17 +82,6 @@ export default {
         }
       }
 
-    },
-    getStatus(row){
-      if(row.IsComplete)
-        return "<span class='green'>Completed</span>"
-      return "<span class='red'>Waiting</span>"
-    },
-    getMessage(row){
-      if(!row.IsComplete){
-        return row.Message
-      }
-      return ''
     }
   },
 
