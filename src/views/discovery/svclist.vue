@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { getList } from '@/api/services'
+import { getServiceList } from '@/api/services'
 import { NewClient } from '@/utils/ws'
 
 export default {
@@ -67,7 +67,7 @@ export default {
     fetchData() {
       this.listLoading = true
       // 通过rest api 获取
-      getList('default').then(response => {
+      getServiceList('default').then(response => {
         this.list = response.data
         this.listLoading = false
       })

@@ -13,6 +13,11 @@
           {{ scope.$index+1 }}
         </template>
       </el-table-column>
+      <el-table-column label="状态" width="100">
+        <template slot-scope="scope">
+          <p></p>
+        </template>
+      </el-table-column>
       <el-table-column label="名称" width="350">
         <template slot-scope="scope">
           <p>{{ scope.row.Name }}</p>
@@ -23,25 +28,9 @@
           <span>{{ scope.row.NameSpace }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="服务发现种类" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.Type }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="端口" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.Ports }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="ClusterIps" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.ClusterIps }}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column label="创建时间" width="170" align="center">
         <template slot-scope="scope">
-          {{ scope.row.CreateTime }}
+          <span>{{ scope.row.CreateTime }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -49,10 +38,8 @@
 </template>
 
 <script>
-import { getServiceList } from '@/api/services'
-import { NewClient } from '@/utils/ws'
-import {getList} from "@/api/ingress";
-
+import { getList } from '@/api/ingress'
+import { NewClient } from "@/utils/ws";
 
 export default {
   data() {
@@ -84,6 +71,17 @@ export default {
         }
       }
 
+    },
+    getStatus(row){
+      if(row.IsComplete)
+        return "<span class='green'>Active</span>"
+      return "<span class='red'>Waiting</span>"
+    },
+    getMessage(row){
+      if(!row.IsComplete){
+        return row.Message
+      }
+      return ''
     }
   },
 

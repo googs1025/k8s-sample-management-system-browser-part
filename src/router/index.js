@@ -68,12 +68,12 @@ export const constantRoutes = [
         component: () => import('@/views/workloads/deplist'),
         meta: { title: 'Deployment列表', icon: 'table' }
       },
-      {
-        path: 'services',
-        name: 'Services',
-        component: () => import('@/views/discovery/svclist'),
-        meta: { title: 'Service列表', icon: 'tree' }
-      },
+      // {
+      //   path: 'services',
+      //   name: 'Services',
+      //   component: () => import('@/views/discovery/svclist'),
+      //   meta: { title: 'Service列表', icon: 'tree' }
+      // },
       {
         path: 'pods',
         name: 'Pods',
@@ -101,6 +101,28 @@ export const constantRoutes = [
         component: () => import('@/views/discovery/svclist'),
         meta: { title: 'Service列表', icon: 'table' }
       }
+    ]
+  },
+  {
+    path: '/ingress',
+    component: Layout,
+    redirect: '/ingress/ingress-list',
+    name: 'ingress',
+    meta: { title: 'Ingress管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'ingress-list',
+        name: 'Ingress-list',
+        component: () => import('@/views/ingress/ingress-list'),
+        meta: { title: 'Ingress列表', icon: 'table' }
+      },
+      {
+        path: 'createingress',
+        name: 'Createingress',
+        component: () => import('@/views/ingress/ingress-create'),
+        meta: { title: '创建ingress', icon: 'tree' }
+      },
+
     ]
   },
   {
