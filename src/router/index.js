@@ -97,7 +97,7 @@ export const constantRoutes = [
         name: 'Pods',
         component: () => import('@/views/workloads/podlist'),
         meta: { title: 'Pod列表', icon: 'tree' }
-      },
+      }
     ]
   },
   {
@@ -133,7 +133,54 @@ export const constantRoutes = [
         name: 'Createingress',
         component: () => import('@/views/ingress/ingress-create'),
         meta: { title: '创建ingress', icon: 'tree' }
+      }
+
+    ]
+  },
+  {
+    path: '/resources',
+    component: Layout,
+    redirect: '/resources/secrets',
+    name: 'resources',
+    meta: { title: '资源管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'secrets',
+        name: 'Secrets',
+        component: () => import('@/views/resources/secretlist'),
+        meta: { title: '密文列表', icon: 'table' }
       },
+      {
+        path: 'createsecret',
+        name: 'Createsecret',
+        component: () => import('@/views/resources/secret-create'),
+        meta: { title: '创建密文', icon: 'table' }
+      },
+      {
+        path: 'secretsget',
+        name: 'Secretsget',
+        component: () => import('@/views/resources/secret-get'),
+        meta: { title: '查看密文', icon: 'table' },
+        // hidden:true
+      },
+      {
+        path: 'configmaps',
+        name: 'Configmaps',
+        component: () => import('@/views/resources/configmaplist'),
+        meta: { title: '配置列表', icon: 'tree' }
+      }
+      // {
+      //   path: 'createconfigmaps',
+      //   name: 'CreateConfigmaps',
+      //   component: () => import('@/views/resources/configmap-create'),
+      //   meta: { title: '创建配置', icon: 'tree' }
+      // },
+      // {
+      //   path: 'configmaps',
+      //   name: 'Configmaps',
+      //   // component: () => import('@/views/resources/configmaplist'),
+      //   meta: { title: '配置列表', icon: 'tree' }
+      // },
 
     ]
   },
