@@ -7,10 +7,26 @@ export function getConfigmapList(ns) {
     method: 'get',
   })
 }
+
 export function rmConfigmap(ns,name) {
   return request({
-    url: '/configmaps?namespace'+ns +'&name='+name,
+    url: '/configmaps?namespace='+ns +'&name='+name,
     method: 'delete',
 
+  })
+}
+
+export function postConfigMap(data) {
+  return request({
+    url: '/configmaps',
+    method: 'post',
+    data
+  })
+}
+// 获取详细
+export function getConfigMap(ns,name) {
+  return request({
+    url: '/configmaps/' +ns +'/'+name,
+    method: 'get',
   })
 }

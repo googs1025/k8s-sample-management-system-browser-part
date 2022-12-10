@@ -1,5 +1,13 @@
 <template>
   <div class="app-container">
+    <div>
+      namespace:
+      <el-select placeholder="选择命名空间" @change="changeNs" v-model="namespace">
+        <el-option v-for="ns in nslist "
+                   :label="ns.Name"
+                   :value="ns.Name"/>
+      </el-select>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -42,23 +50,34 @@
 <script>
 import { getStatefulSetList } from '@/api/statefulset'
 import { NewClient } from '@/utils/ws'
+import {getList as getNsList} from "@/api/ns";
 
 export default {
   data() {
     return {
       list: null,
       listLoading: true,
-      wsClient:null
+      wsClient:null,
+      nslist:[] , //ns列表
+      namespace: 'default'
     }
   },
   created() {
     this.fetchData()
+    getNsList().then(rsp=>{
+      this.nslist=rsp.data
+    })
   },
   methods: {
+    changeNs(ns){
+      getList(ns).then(rsp=>{
+        this.list=rsp.data
+      })
+    },
     fetchData() {
       this.listLoading = true
       // 通过rest api 获取
-      getStatefulSetList('default').then(response => {
+      getStatefulSetList(this.namespace).then(response => {
         this.list = response.data
         this.listLoading = false
       })

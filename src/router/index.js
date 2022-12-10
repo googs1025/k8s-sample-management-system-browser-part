@@ -97,6 +97,12 @@ export const constantRoutes = [
         name: 'Pods',
         component: () => import('@/views/workloads/podlist'),
         meta: { title: 'Pod列表', icon: 'tree' }
+      },
+      {
+        path: 'podlogs',
+        name: 'Podlogs',
+        component: () => import('@/views/workloads/podlogs'),
+        meta: { title: '查看logs', icon: 'tree' }
       }
     ]
   },
@@ -161,26 +167,20 @@ export const constantRoutes = [
         name: 'Secretsget',
         component: () => import('@/views/resources/secret-get'),
         meta: { title: '查看密文', icon: 'table' },
-        // hidden:true
+        hidden:true // 藏起来，在list点选才会进来此路由
       },
       {
         path: 'configmaps',
         name: 'Configmaps',
         component: () => import('@/views/resources/configmaplist'),
         meta: { title: '配置列表', icon: 'tree' }
+      },
+      {
+        path: 'createconfigmaps',
+        name: 'CreateConfigmaps',
+        component: () => import('@/views/resources/configmap-create'),
+        meta: { title: '创建配置', icon: 'tree' }
       }
-      // {
-      //   path: 'createconfigmaps',
-      //   name: 'CreateConfigmaps',
-      //   component: () => import('@/views/resources/configmap-create'),
-      //   meta: { title: '创建配置', icon: 'tree' }
-      // },
-      // {
-      //   path: 'configmaps',
-      //   name: 'Configmaps',
-      //   // component: () => import('@/views/resources/configmaplist'),
-      //   meta: { title: '配置列表', icon: 'tree' }
-      // },
 
     ]
   },
