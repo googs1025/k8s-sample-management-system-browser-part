@@ -47,6 +47,14 @@
               {{ scope.row.CreateTime }}
             </template>
           </el-table-column>
+          <el-table-column label="操作" width="120" align="center">
+            <template slot-scope="scope">
+              <router-link icon="el-icon-edit" :to="{name:'Podshell',
+              params:{ns:scope.row.NameSpace,pod:scope.row.Name}}"><el-link >远程<i class="el-icon-s-platform el-icon--right"></i></el-link></router-link>
+              <router-link :to="{name:'Podlogs',
+              params:{ns:scope.row.NameSpace,pod:scope.row.Name}}"> <el-link  >日志<i class="el-icon-view el-icon--right"></i></el-link></router-link>
+            </template>
+          </el-table-column>
         </el-table>
       </el-main>
     </el-container>

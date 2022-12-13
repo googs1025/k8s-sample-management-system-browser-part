@@ -1,57 +1,83 @@
 <template>
   <div>
     <div style="padding-left: 20px;padding-top:30px">
-      容器: <el-select  @change="containerChange"  placeholder="选择容器"
-                      v-model="selectedContainer">
+      选择容器:
+      <el-select placeholder="选择容器" @change="containerChange" v-model="selectedContainer">
       <el-option v-for="c in containers "
                  :label="c.Name"
                  :value="c.Name"/>
     </el-select>
+      <el-button type="primary" @click="showLogs">显示日志</el-button>
+      <el-button  @click="logs=''">清空</el-button>
     </div>
-    <div class="logs">
+
+    <div class="logs" ref="logs">
       {{logs}}
     </div>
+
   </div>
 </template>
 <script>
-import {  getPodContainers ,getPodsLogs } from "@/api/pods";
+import {  getPodContainers ,getPodsLogs  } from "@/api/pods";
 import request from '@/utils/request'
+
 export default {
   data(){
     return {
       containers: [],
       selectedContainer: "",
-      logs: ""
+      logs: "",
+      ns: "",
+      pod:""
     }
   },
   created() {
-    getPodContainers("k8s-operator-practice-easy-system","k8s-operator-practice-easy-controller-manager-5f69769dbb-7vvw4").then(rsp=>{
-      this.containers=rsp.data
-    })
+    const ns=this.$route.params.ns
+    const pod=this.$route.params.pod
+    if(ns===undefined || pod===undefined) {
+      alert("错误的参数")
+      this.$router.push({name:"Pods"})  //跳回pod列表页
+    }else{
+      this.ns=ns
+      this.pod=pod
+      getPodContainers(this.ns,this.pod).then(rsp=>{
+        this.containers=rsp.data
+      })
+    }
   },
   methods:{
     containerChange(){
-      // 单次访问用
-      // getPodsLogs("k8s-operator-practice-easy-system","k8s-operator-practice-easy-controller-manager-5f69769dbb-7vvw4",this.selectedContainer)
-      //   .then(rsp=>{
-      //     this.logs=rsp.data
-      //   })
-      // 流式读取用
-      const ns="k8s-operator-practice-easy-system"
-      const podname="k8s-operator-practice-easy-controller-manager-5f69769dbb-7vvw4"
-      const cname=this.selectedContainer
+      getPodsLogs(this.ns,this.pod,this.selectedContainer)
+        .then(rsp=>{
+          this.logs=rsp.data
+        })
+    },
+    showLogs() {
       request({
-        url: '/pods/logs?namespace=' + ns + '&podname=' +podname + '&cname=' +cname,
+        url: '/pods/logs?namespace=' + this.ns
+          + '&podname=' +this.pod +
+          '&cname=' +this.selectedContainer,
         method: 'GET',
         onDownloadProgress: e => {
+          console.log(e)
           const dataChunk = e.currentTarget.response;
           this.logs+=dataChunk
-
+          if(this.$refs['logs']!==undefined && this.$refs['logs'].scrollTop!==undefined){
+            this.$refs['logs'].scrollTop =  this.$refs['logs'].scrollHeight;
+          }
         }
+      }).catch(e=>{
+        //偶尔发现 一些第三方软件 出错后 也会采取跳转的方法
+        this.$router.push({name:"Pods"})  //跳回pod列表页
+
+
       });
 
-    }
 
+
+
+
+    }
   }
 }
 </script>
