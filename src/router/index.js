@@ -54,7 +54,28 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
+  {
+    path: '/nodes',
+    component: Layout,
+    redirect: '/nodes/nodeshell',
+    name: 'nodes',
+    meta: { title: '节点管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'nodeshell',
+        name: 'Nodeshell',
+        component: () => import('@/views/node/nodeshell'),
+        meta: { title: 'nodeshell(临时)', icon: 'table' }
+      },
+      {
+        path: 'nodelist',
+        name: 'Nodelist',
+        component: () => import('@/views/node/nodelist'),
+        meta: { title: '节点列表', icon: 'tree' }
+      },
 
+    ]
+  },
   {
     path: '/workloads',
     component: Layout,

@@ -1,24 +1,13 @@
 <template>
 
-  <div
-    style="min-height: 500px;
-    padding: 10px"
-  >
-    <div style="padding-left: 20px;padding-top:30px">
-      容器: <el-select  @change="containerChange"  placeholder="选择容器"
-                      v-model="selectedContainer">
-      <el-option v-for="c in containers "
-                 :label="c.Name"
-                 :value="c.Name"/>
-    </el-select>
-    </div>
+  <div style="min-height: 500px;padding: 10px">
+
     <div id="terminal" ref="terminal"></div>
   </div>
 
 </template>
 <script>
 import { Terminal } from "xterm";
-import {  getPodContainers   } from "@/api/pods";
 import "xterm/css/xterm.css";
 export default {
   data(){
@@ -28,36 +17,20 @@ export default {
       term:null,//终端对象
       ws:null, //ws 客户端
       wsInited:false , //是否初始化完毕
-      containers:[],
-      ns: "",
-      pod:"",
-      selectedContainer:""
+
     }
   },
-  created() {
-    const ns=this.$route.params.ns
-    const pod=this.$route.params.pod
-    if(ns===undefined || pod===undefined){
-      alert("错误的参数")
-    }else{
-      this.ns=ns
-      this.pod=pod
-      getPodContainers(ns,pod).then(rsp=>{
-        this.containers=rsp.data
-      })
-    }
-
+  mounted() {
+    this.initShell()
   },
-
   methods:{
-    containerChange() {
+    initShell() {
       this.initWS()// 初始化 websocket
       this.initTerm() //初始化term
     },
     //初始化 websocket 客户端
     initWS(){
-      var ws = new WebSocket("ws://localhost:8080/podws?namespace="
-        +this.ns+"&pod="+this.pod+"&c="+this.selectedContainer);
+      var ws = new WebSocket("ws://localhost:8080/nodews")
       ws.onopen = function(){
         console.log("open");
       }
@@ -93,22 +66,17 @@ export default {
       // 创建terminal实例
       term.open(this.$refs["terminal"]);
       term.prompt = () => {
-        term.writeln("\n\n POD远程可视化介面");
+        term.writeln("\n\n 节点远程可视化介面 ");
         term.writeln("\n 正在初始化终端");
       };
       term.prompt();
-
       term.onData((key)=> {
         if(this.wsInited){
           this.ws.send(key)
         }
       });
-
-
       this.term=term
     }
   }
-
 }
-
 </script>
