@@ -22,7 +22,6 @@
             <br/>
             <el-tag type="danger" v-for="label in scope.row.Taints">{{label}}</el-tag>
           </p>
-
         </template>
       </el-table-column>
       <el-table-column label="CPU" width="100" align="center">
@@ -40,13 +39,19 @@
           {{ scope.row.Usage.Pods }}/{{ scope.row.Capacity.Pods }}
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" width="170" align="center">
+      <el-table-column label="创建时间" width="100" align="center">
         <template slot-scope="scope">
           {{ scope.row.CreateTime }}
         </template>
       </el-table-column>
+
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
+          <router-link icon="el-icon-edit" :to="{name:'Nodedetail',
+              params:{node:scope.row.Name}}"><el-link >编辑<i class="el-icon-edit-outline"></i></el-link></router-link>
+
+          <router-link :to="{name:'Nodeshell',
+              params:{node:scope.row.Name}}"> <el-link  >远程<i class="el-icon-s-platform el-icon--right"></i></el-link></router-link>
         </template>
       </el-table-column>
     </el-table>
@@ -92,4 +97,3 @@ export default {
   }
 }
 </script>
-

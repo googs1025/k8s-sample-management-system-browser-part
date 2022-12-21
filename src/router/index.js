@@ -65,13 +65,21 @@ export const constantRoutes = [
         path: 'nodeshell',
         name: 'Nodeshell',
         component: () => import('@/views/node/nodeshell'),
-        meta: { title: 'nodeshell(临时)', icon: 'table' }
+        meta: { title: 'nodeshell(临时)', icon: 'table' },
+        hidden: true
       },
       {
         path: 'nodelist',
         name: 'Nodelist',
         component: () => import('@/views/node/nodelist'),
         meta: { title: '节点列表', icon: 'tree' }
+      },
+      {
+        path: 'nodedetail',
+        name: 'Nodedetail',
+        component: () => import('@/views/node/nodedetail'),
+        meta: { title: '节点编辑', icon: 'tree' },
+        hidden: true
       },
 
     ]

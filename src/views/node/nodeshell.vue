@@ -2,12 +2,14 @@
 
   <div style="min-height: 500px;padding: 10px">
 
+
     <div id="terminal" ref="terminal"></div>
   </div>
 
 </template>
 <script>
 import { Terminal } from "xterm";
+
 import "xterm/css/xterm.css";
 export default {
   data(){
@@ -17,20 +19,27 @@ export default {
       term:null,//终端对象
       ws:null, //ws 客户端
       wsInited:false , //是否初始化完毕
-
+      nodeName: '',
     }
   },
   mounted() {
+    //this.initShell()
+    const nodeName=this.$route.params.node  //取到节点名称
+    if(nodeName===undefined ) {
+      this.$router.push({name:"Nodelist"})  //跳回列表页
+    }
+    this.nodeName=nodeName
     this.initShell()
   },
   methods:{
+
     initShell() {
       this.initWS()// 初始化 websocket
       this.initTerm() //初始化term
     },
     //初始化 websocket 客户端
     initWS(){
-      var ws = new WebSocket("ws://localhost:8080/nodews")
+      var ws = new WebSocket("ws://localhost:8080/nodews?node="+this.nodeName)
       ws.onopen = function(){
         console.log("open");
       }
@@ -66,7 +75,7 @@ export default {
       // 创建terminal实例
       term.open(this.$refs["terminal"]);
       term.prompt = () => {
-        term.writeln("\n\n 节点远程可视化介面 ");
+        term.writeln("\n\n 节点远程可视化介面");
         term.writeln("\n 正在初始化终端");
       };
       term.prompt();
@@ -77,6 +86,7 @@ export default {
       });
       this.term=term
     }
-  }
+  },
+
 }
 </script>
