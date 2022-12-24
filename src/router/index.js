@@ -144,6 +144,41 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/rbac',
+    component: Layout,
+    redirect: '/rbac/rolelist',
+    name: 'rbac',
+    meta: { title: 'RBAC可视化管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'rolelist',
+        name: 'Rolelist',
+        component: () => import('@/views/rbac/rolelist'),
+        meta: { title: '角色列表', icon: 'table' },
+      },
+      {
+        path: 'clusterrolelist',
+        name: 'Clusterrolelist',
+        component: () => import('@/views/rbac/clusterrolelist'),
+        meta: { title: '集群角色列表', icon: 'tree' }
+      },
+      {
+        path: 'rolebindinglist',
+        name: 'Rolebindinglist',
+        component: () => import('@/views/rbac/rolebindinglist'),
+        meta: { title: '角色绑定', icon: 'tree' },
+
+      },
+      {
+        path: 'createrole',
+        name: 'Createrole',
+        component: () => import('@/views/rbac/create-role'),
+        meta: { title: '创建/编辑角色', icon: 'tree' }
+      },
+
+    ]
+  },
+  {
     path: '/discovery',
     component: Layout,
     redirect: '/discovery/table',
