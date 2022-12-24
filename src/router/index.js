@@ -175,6 +175,13 @@ export const constantRoutes = [
         component: () => import('@/views/rbac/create-role'),
         meta: { title: '创建/编辑角色', icon: 'tree' }
       },
+      {
+        path: 'createrolebinding',
+        name: 'Createrolebinding',
+        component: () => import('@/views/rbac/create-rolebinding'),
+        meta: { title: '创建角色绑定', icon: 'tree' },
+        hidden: true
+      },
 
     ]
   },

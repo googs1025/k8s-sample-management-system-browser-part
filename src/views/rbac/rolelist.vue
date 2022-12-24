@@ -24,7 +24,8 @@
       </el-table-column>
       <el-table-column label="角色名" width="350">
         <template slot-scope="scope">
-          <p>{{ scope.row.Name }} </p>
+          <p><router-link :to="{name:'Createrole',
+              params:{ns:scope.row.NameSpace,name:scope.row.Name}}">{{ scope.row.Name }}</router-link> </p>
 
 
         </template>
