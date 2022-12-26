@@ -182,6 +182,12 @@ export const constantRoutes = [
         meta: { title: '创建角色绑定', icon: 'tree' },
         hidden: true
       },
+      {
+        path: 'salist',
+        name: 'Salist',
+        component: () => import('@/views/rbac/salist'),
+        meta: { title: '服务账号列表', icon: 'tree' },
+      },
 
     ]
   },

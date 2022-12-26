@@ -65,9 +65,19 @@ export function createRole(data) {
     method: 'post',
   })
 }
+
 export function deleteRole(ns,name) {
   return request({
     url: '/roles?ns='+ns+"&name="+name,
     method: 'delete',
   })
 }
+
+//获取服务账号列表
+export function getSaList(ns) {
+  return request({
+    url: '/sa?ns=' + ns,
+    method: 'get',
+  })
+}
+
