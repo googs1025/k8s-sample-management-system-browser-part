@@ -81,3 +81,44 @@ export function getSaList(ns) {
   })
 }
 
+//删除clusterrole
+export function deleteClusterRole(name) {
+  return request({
+    url: '/clusterroles?name='+name,
+    method: 'delete',
+  })
+}
+//获取clusterrole列表
+export function getClusterRoleList(ns) {
+  return request({
+    url: '/clusterroles',
+    method: 'get',
+  })
+}
+
+export function getClusterRoleDetail(ns,name) {
+  //这个ns依然没有用
+  return request({
+    url: '/clusterroles/'+name,
+    method: 'get',
+  })
+}
+
+//修改 角色
+export function updateClusterRole(ns,name,data) {
+  //这个ns参数用不到，为了前端代码方便，就没有去掉
+  return request({
+    url: '/clusterroles/'+name,
+    data,
+    method: 'post',
+  })
+}
+
+export function createClusterRole(data) {
+  return request({
+    url: '/clusterroles',
+    data,
+    method: 'post',
+  })
+}
+

@@ -5,14 +5,17 @@
         <span>基本配置</span>
         <el-form  :inline="true">
           <el-form-item  label="角色名称">
-            <el-input :disabled="isupdate"  v-model="Name"></el-input>
+            <el-input :disabled="isupdate "  v-model="Name"></el-input>
           </el-form-item>
           <el-form-item label="命名空间">
-            <el-select  :disabled="isupdate" v-model="NameSpace">
+            <el-select  :disabled="isupdate ||  isClusterRole" v-model="NameSpace">
               <el-option v-for="ns in nslist "
                          :label="ns.Name"
                          :value="ns.Name"/>
             </el-select>
+          </el-form-item>
+          <el-form-item label="类型">
+            <el-checkbox :disabled="isupdate" v-model="isClusterRole">集群角色</el-checkbox>
           </el-form-item>
 
         </el-form>
@@ -71,7 +74,7 @@
 <script>
 import { getList  as getNsList } from '@/api/ns'
 import {getResources} from "@/api/resources";
-import {createRole,getRoleDetail,updateRole} from "@/api/rbac";
+import {createRole,getRoleDetail,updateRole,createClusterRole,updateClusterRole,getClusterRoleDetail} from "@/api/rbac";
 const defaultVerbs= ["create","delete","get","list","patch","update","watch","deletecollection"]
 export default {
   data(){
@@ -87,7 +90,8 @@ export default {
         //{apiGroups:[],resources:[],verbs:[]}
       ],
       resources:[], //从后端 请求 /resources 得到所有 group 和 资源 列表
-      isupdate:false  //代表是否是编辑
+      isupdate:false, //代表是否是编辑
+      isClusterRole: false  //新增：是否是集群角色
     }
   },
   created() {
@@ -99,6 +103,7 @@ export default {
       //下面代码，如果是编辑，则会有参数传过来
       const ns=this.$route.params.ns
       const name=this.$route.params.name
+
       if(ns!==undefined && name!==undefined){
         this.Name=name
         this.NameSpace=ns
@@ -132,7 +137,9 @@ export default {
     },
     //拼凑 {groupversion:'',verbs:[],verbscopy:[]}
     loadDetail(){ //编辑状态  要执行这个函数 ,主要是用来填充权限框
-      getRoleDetail(this.NameSpace,this.Name).then(rsp=>{
+      const getFunc=this.$route.params.isCluster===undefined?getRoleDetail:getClusterRoleDetail
+      this.isClusterRole=!!this.$route.params.isCluster
+      getFunc(this.NameSpace,this.Name).then(rsp=>{
         rsp.data.rules.forEach(rule=>{
           rule.apiGroups.forEach(group=>{
             //每一个group，要去 this.resources 中遍历 ，得到 对应的verbs.防止前端创建时 乱填
@@ -203,13 +210,15 @@ export default {
     saveRole(){
       this.concatRules() //拼接rule对象
       const postData={metadata:{name:this.Name,namespace:this.NameSpace},rules:this.postRules}
-      console.log(postData)
+
+      const createFunc=this.isClusterRole?createClusterRole:createRole
+      const updateFunc=this.isClusterRole?updateClusterRole:updateRole
       if(this.isupdate){ //代表是编辑模式
-        updateRole(this.NameSpace,this.Name,postData).then(rsp=>{
+        updateFunc(this.NameSpace,this.Name,postData).then(rsp=>{
           alert("更新成功")
         })
       }else{
-        createRole(postData).then(rsp=>{
+        createFunc(postData).then(rsp=>{
           alert("创建成功")
         })
       }
