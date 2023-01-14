@@ -12,7 +12,7 @@
        </span>
       </div>
       <MetaDataConfig ref="metaData" @Update="UpdateObject"></MetaDataConfig>
-      <SpecConfig ref="specData" @Update="UpdateObject"></SpecConfig>
+      <SpecConfig ref="specData" @Update="UpdateObject" :tips="tips"></SpecConfig>
     </el-card>
     <div>
       <DeployYaml :deployment="deployment" />
