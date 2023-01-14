@@ -1,13 +1,5 @@
 <template>
   <div class="app-container">
-    <div>
-      namespace:
-      <el-select placeholder="选择命名空间" @change="changeNs" v-model="namespace">
-        <el-option v-for="ns in nslist "
-                   :label="ns.Name"
-                   :value="ns.Name"/>
-      </el-select>
-    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -28,7 +20,8 @@
       </el-table-column>
       <el-table-column label="名称" width="350">
         <template slot-scope="scope">
-          <p>{{ scope.row.Name }}</p>
+          <p>
+            <router-link :to="{name:'Createdeploy',params:{ns:scope.row.NameSpace,name:scope.row.Name}}">{{ scope.row.Name }}</router-link></p>
           <p class="red">{{ getMessage(scope.row) }}</p>
         </template>
       </el-table-column>
@@ -57,43 +50,32 @@
 
 <script>
 import { getList } from '@/api/deployments'
-import { NewClient } from '@/utils/ws'
-import {getList as getNsList} from "@/api/ns";
+import { NewClient } from "@/utils/ws";
 
 export default {
   data() {
     return {
       list: null,
       listLoading: true,
-      wsClient:null,
-      nslist:[] , //ns列表
-      namespace: 'default'
+      wsClient:null
     }
   },
   created() {
     this.fetchData()
-    getNsList().then(rsp=>{
-      this.nslist=rsp.data
-    })
   },
   methods: {
-    changeNs(ns){
-      getList(ns).then(rsp=>{
-        this.list=rsp.data
-      })
-    },
     fetchData() {
       this.listLoading = true
       // 通过rest api 获取
-      getList(this.namespace).then(response => {
+      getList("default").then(response => {
         this.list = response.data
         this.listLoading = false
       })
       this.wsClient = NewClient()
-      this.wsClient.onmessage = (e)=> {
-        if (e.data !== 'ping') {
-          const object = JSON.parse(e.data)
-          if (object.type === 'deployments') {
+      this.wsClient.onmessage = (e)=>{
+        if(e.data !== 'ping'){
+          const object=JSON.parse(e.data)
+          if(object.type === 'deployments'){
             this.list = object.result.data
             this.$forceUpdate()
           }
