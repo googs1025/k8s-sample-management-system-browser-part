@@ -13,6 +13,7 @@
             </el-form-item>
             <MatchLabels :data.sync="spec.selector.matchLabels" :tips="tips"/>
             <MatchExprs :data.sync="spec.selector.matchExpressions" :tips="tips"/>
+            <TplConfig :data.sync="spec.template" :tips="tips"/>
           </el-form>
 
         </div>
@@ -28,12 +29,11 @@ function copyObject(obj){
   return JSON.parse(str)
 }
 export default {
-  props:["tips"],
+  props:["data","tips"],
   data(){
     return {
-      spec:{replicas:1,selector:{}},//
+      spec:{replicas:1,selector:{},template:{}},//
       expand: true,
-
     }
   },
   created(){
@@ -44,9 +44,15 @@ export default {
 
   },
   watch:{
+    data:{
+      handler:function(newVal,oldVal) {
+        this.spec=newVal
+      },
+      deep: true
+    },
     spec:{
       handler:function(newVal,oldVal) {
-        this.$emit("Update","spec",newVal)
+        this.$emit("update:data",newVal)
       },
       deep: true
     },
@@ -54,7 +60,8 @@ export default {
   components:{
     Expand:()=>import("./card-expand.vue"),
     MatchLabels:()=>import('@/components/Deployment/spec-selector-matchlabels.vue'),
-    MatchExprs:()=>import('@/components/Deployment/spec-selector-matchexprs.vue')
+    MatchExprs:()=>import('@/components/Deployment/spec-selector-matchexprs.vue'),
+    TplConfig:()=>import("./deployment-spec-template.vue"),
   }
 
 
