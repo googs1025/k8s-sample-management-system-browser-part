@@ -21,10 +21,38 @@ export function rmDeploy(ns,name) {
     method: 'delete',
   })
 }
-export function createDeploy(data) {
+
+export function createDeploy(data,fast) {
+  let url='/deployments'
+  if(fast){
+    url+="?fast=1"
+  }
   return request({
-    url: '/deployments',
+    url,
     data,
     method: 'post',
+  })
+}
+
+// 修改模式与创建相同，只是增加一个update=1的query参数过去
+export function updateDeploy(data,fast) {
+  let url='/deployments'
+  if(fast){
+    url+="?fast=1&update=1"
+  }else{
+    url+="?update=1"
+  }
+  return request({
+    url,
+    data,
+    method: 'post',
+  })
+}
+
+// 获取deploy下的所有pods列表
+export function loadDeployPods(ns,name) {
+  return request({
+    url: '/deployments-pods/' + ns+"/"+name,
+    method: 'get',
   })
 }

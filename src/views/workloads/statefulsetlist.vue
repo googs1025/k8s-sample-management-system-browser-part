@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     changeNs(ns){
-      getList(ns).then(rsp=>{
+      getStatefulSetList(ns).then(rsp=>{
         this.list=rsp.data
       })
     },

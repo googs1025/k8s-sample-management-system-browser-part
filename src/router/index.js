@@ -103,12 +103,13 @@ export const constantRoutes = [
         component: () => import('@/views/deployment/deployment-create'),
         meta: { title: '创建/编辑Deployment', icon: 'table' }
       },
-      // {
-      //   path: 'services',
-      //   name: 'Services',
-      //   component: () => import('@/views/discovery/svclist'),
-      //   meta: { title: 'Service列表', icon: 'tree' }
-      // },
+      {
+        path: 'deploydetail',
+        name: 'Deploydetail',
+        component: () => import('@/views/deployment/deployment-detail'),
+        meta: { title: 'Deployment详细', icon: 'table' },
+        hidden: true
+      },
       {
         path: 'statefulset',
         name: 'StatefulSets',

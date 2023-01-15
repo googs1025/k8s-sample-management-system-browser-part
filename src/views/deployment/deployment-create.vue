@@ -9,11 +9,17 @@
             inactive-text="关闭教学"
           >
           </el-switch>
+           <el-switch style="margin-left: 50px"
+                      v-model="fastmod"
+                      active-text="快捷模式"
+                      inactive-text="详细模式"
+           >
+          </el-switch>
        </span>
       </div>
 
-      <MetaDataConfig :data.sync="deployment.metadata"  :tips="tips"></MetaDataConfig>
-      <SpecConfig  :data.sync="deployment.spec"   :tips="tips"></SpecConfig>
+      <MetaDataConfig :fastmod="fastmod" :data.sync="deployment.metadata"  :tips="tips"></MetaDataConfig>
+      <SpecConfig :fastmod="fastmod" :data.sync="deployment.spec"   :tips="tips"></SpecConfig>
     </el-card>
     <div>
       <DeployYaml :deployment="deployment" />
@@ -25,7 +31,7 @@
 </template>
 <script>
 import DeployYaml from  './deployment-yaml'
-import {loadDeploy,createDeploy} from "@/api/deployments";
+import {loadDeploy,createDeploy,updateDeploy} from "@/api/deployments";
 import {clearEmptyObject} from "@/utils/helper";
 
 export default {
@@ -34,6 +40,7 @@ export default {
       deployment:{ apiVersion:'apps/v1',Kind:'Deployment',
         metadata:{}},
       tips:false,
+      fastmod: false,//快捷模式
       isUpdate: false
     }
   },
@@ -51,8 +58,13 @@ export default {
   methods:{
 
     postDeploy(){ //新增ingress
-      createDeploy(clearEmptyObject(this.deployment)).then(rsp=>{
+      const operatorFunc=this.isUpdate?updateDeploy:createDeploy
+      // console.log(this.deployment.spec.template.spec.containers[0])
+      const cleardObject=clearEmptyObject(this.deployment)
+      console.log(cleardObject)
+      operatorFunc(cleardObject,this.fastmod).then(rsp=>{
         alert("成功")
+        this.$router.push({name:"Deployments"})
       })
     }
   },

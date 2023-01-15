@@ -1,9 +1,43 @@
+export function objIsEqual(obj1,obj2){
+  var o1 = obj1 instanceof Object;
+  var o2 = obj2 instanceof Object;
+  // 判断是不是对象
+  if (!o1 || !o2) {
+    return obj1 === obj2;
+  }
+
+  //Object.keys() 返回一个由对象的自身可枚举属性(key值)组成的数组,
+  //例如：数组返回下表：let arr = ["a", "b", "c"];console.log(Object.keys(arr))->0,1,2;
+  if (Object.keys(obj1).length !== Object.keys(obj2).length) {
+    return false;
+  }
+
+  for (var o in obj1) {
+    var t1 = obj1[o] instanceof Object;
+    var t2 = obj2[o] instanceof Object;
+    if (t1 && t2) {
+      return objIsEqual(obj1[o], obj2[o]);
+    } else if (obj1[o] !== obj2[o]) {
+      return false;
+    }
+  }
+  return true;
+
+}
+
+export function trim(x) {
+  return x.replace(/^\s+|\s+$/gm,'');
+
+}
+
 export function isEmptyObject(obj){ //判定对象是否为空  如 {}
 
   if(obj===null || obj===undefined) return true
-
-  return Object.keys(obj).length===0
+  var objStr = JSON.stringify(obj);
+  return objStr === '{}'
+  // return Object.keys(obj).length===0   //这句话有问题
 }
+
 export function clearEmptyObject(obj){  //清除 空对象属性 ,是一个递归
   for( var key in obj ) {
     if(obj[key]===undefined || obj[key]===null  ){
@@ -16,6 +50,14 @@ export function clearEmptyObject(obj){  //清除 空对象属性 ,是一个递�
           clearEmptyObject(obj[key][i])
         }
       }else{
+        if(key==='httpGet'){
+          console.log(obj[key].port)
+          console.log(isEmptyObject(obj[key]))
+          for(var k in obj[key]){
+            console.log(k)
+            console.log(obj[key][k])
+          }
+        }
         if( isEmptyObject(obj[key])){
           delete obj[key]
         }else{
@@ -26,6 +68,8 @@ export function clearEmptyObject(obj){  //清除 空对象属性 ,是一个递�
   }
   return obj
 }
+
+
 export function initIfNil(obj,destKey,v){ //  支持多级
   if(v===undefined)
     v={}
@@ -61,6 +105,7 @@ export function fastPathDeploy(obj) {
 
   return obj
 }
+
 export  function copyObject(obj){
   var str=JSON.stringify(obj)
   return JSON.parse(str)

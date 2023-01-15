@@ -18,49 +18,59 @@
   </el-form-item>
 </template>
 <script>
-  export default {
-    props:["data","tips"],
-    data(){
-     return {
-       matchExpressions:[],
-
-     }
-    },
-    created(){
-      this.matchExpressions=this.data
-      if(this.matchExpressions===undefined || this.matchExpressions===null)
-        this.matchExpressions=[]
-
-      this.unParseSlice()
-    },
-    methods:{
-      addEmptyObject(){
-        this.matchExpressions.push({key: '', operator: 'In', values: []})
-
-      },
-      unParseSlice(){ //编辑状态下，需要把 values  整合成_values(数组变成 ,号分割的字符串)
-        this.matchExpressions.forEach(item=>{
-          item._values=item.values.join(',')
-        })
-      },
-      change(index){
-        this.matchExpressions.forEach((item,itemindex)=>{
-          if(itemindex===index && item.key!==''){
-              item.values=item._values.split(',')
-          }
-        })
-      }
-    },
-    watch:{
-      matchExpressions:{
-        handler(newVal,oldVal){
-          this.$emit("update:data",newVal)
-        },
-        deep:true
-      }
-    },
-    components:{
-      ArrayInput:()=>import('@/components/Common/ArrayInput.vue')
+export default {
+  props:["data","tips"],
+  data(){
+    return {
+      matchExpressions:[],
+      store:{_values:[]}
     }
+  },
+  created(){
+    this.matchExpressions=this.data
+    if(this.matchExpressions===undefined || this.matchExpressions===null)
+      this.matchExpressions=[]
+
+    this.unParseSlice()
+  },
+  methods:{
+    addEmptyObject(){
+      this.matchExpressions.push({key: '', operator: 'In', values: []})
+
+    },
+    unParseSlice(){ //编辑状态下，需要把 values  整合成_values(数组变成 ,号分割的字符串)
+      if(this.matchExpressions===undefined){
+        return
+      }
+      this.matchExpressions.forEach(item=>{
+        item._values=item.values.join(',')
+      })
+    },
+    change(index){
+      this.matchExpressions.forEach((item,itemindex)=>{
+        if(itemindex===index && item.key!==''){
+          item.values=item._values.split(',')
+        }
+      })
+    }
+  },
+  watch:{
+    data:{
+      handler:function(newVal,oldVal) {
+        this.matchExpressions=newVal
+        this.unParseSlice()
+      },
+      deep: true
+    },
+    matchExpressions:{
+      handler(newVal,oldVal){
+        this.$emit("update:data",newVal)
+      },
+      deep:true
+    }
+  },
+  components:{
+    ArrayInput:()=>import('@/components/Common/ArrayInput.vue')
   }
+}
 </script>

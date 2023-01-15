@@ -1,5 +1,14 @@
 <template>
   <div class="app-container">
+    <div style="padding: 20px">
+      选择命名空间:
+      <el-select placeholder="选择命名空间" @change="changeNs" v-model="namespace">
+        <el-option v-for="ns in nslist "
+                   :label="ns.Name"
+                   :value="ns.Name"/>
+      </el-select>
+
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -51,23 +60,36 @@
 <script>
 import { getServiceList } from '@/api/services'
 import { NewClient } from '@/utils/ws'
+import { getList as getNsList } from '@/api/ns'
 
 export default {
   data() {
     return {
       list: null,
       listLoading: true,
-      wsClient:null
+      wsClient:null,
+      nslist:[],
+      namespace: 'default'
     }
   },
   created() {
-    this.fetchData()
+    getNsList().then(rsp=>{
+      this.nslist=rsp.data
+      this.fetchData()
+    })
   },
+
   methods: {
+    changeNs(ns){
+      getServiceList(this.namespace).then(response => {
+        this.list = response.data
+        this.listLoading = false
+      })
+    },
     fetchData() {
       this.listLoading = true
       // 通过rest api 获取
-      getServiceList('default').then(response => {
+      getServiceList(this.namespace).then(response => {
         this.list = response.data
         this.listLoading = false
       })
@@ -75,7 +97,7 @@ export default {
       this.wsClient.onmessage = (e)=> {
         if (e.data !== 'ping') {
           const object = JSON.parse(e.data)
-          if (object.type === 'services') {
+          if (object.type === 'services'&& object.result.ns===this.namespace) {
             this.list = object.result.data
             this.$forceUpdate()
           }
@@ -84,6 +106,7 @@ export default {
       }
 
     },
+
   },
 
 }

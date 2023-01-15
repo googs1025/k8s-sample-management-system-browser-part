@@ -56,7 +56,7 @@
 <script>
 import {getJobList} from '@/api/jobs'
 import { NewClient } from '@/utils/ws'
-import {getList} from "@/api/deployments";
+
 import {getList as getNsList} from "@/api/ns";
 
 export default {
@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     changeNs(ns){
-      getList(ns).then(rsp=>{
+      getJobList(ns).then(rsp=>{
         this.list=rsp.data
       })
     },
@@ -92,7 +92,7 @@ export default {
       this.wsClient.onmessage = (e)=>{
         if (e.data !== 'ping') {
           const object = JSON.parse(e.data)
-          if (object.type === 'jobs') {
+          if (object.type === 'jobs'&& object.result.ns===this.namespace) {
             this.list = object.result.data
             this.$forceUpdate()
           }

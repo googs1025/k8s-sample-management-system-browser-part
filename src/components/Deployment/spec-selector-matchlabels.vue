@@ -12,46 +12,54 @@
   </el-form-item>
 </template>
 <script>
-  export default {
-    props:["data","tips"],
-    data(){
-     return {
-       matchLabels:{},
-       matchLabels_array:[]  // [{key:'xx',value:''}]
-     }
-    },
-    created(){
-      this.matchLabels=this.data
-      this.unParseSlice()
-    },
-    methods:{
-      addSlice(){
-        this.matchLabels_array.push({key:'',value:''})
-        this.parseSlice()
-      },
-      parseSlice(){  //把数据解析为对象
-        this.matchLabels={}
-        this.matchLabels_array.forEach(item=>{
-          if(item.key!==''){
-            this.matchLabels[item.key]=item.value
-          }
-        })
+export default {
+  props:["data","tips"],
+  data(){
+    return {
+      matchLabels:{},
+      matchLabels_array:[]  // [{key:'xx',value:''}]
+    }
+  },
+  created(){
+    this.matchLabels=this.data
+    this.unParseSlice()
+  },
+  methods:{
+    addSlice(){
+      this.matchLabels_array.push({key:'',value:''})
 
-      },
-      unParseSlice(){  //把对象 解析为数组， 常用于编辑状态
-          this.matchLabels_array=[]
-          for(var key in this.matchLabels){
-            this.matchLabels_array.push({key,value:this.matchLabels[key]})
-          }
-      }
+      // this.parseSlice()
     },
-    watch:{
-      matchLabels:{
-        handler(newVal,oldVal){
-          this.$emit("update:data",newVal)
-        },
-        deep:true
+    parseSlice(){  //把数组解析为对象
+      this.matchLabels={}
+      this.matchLabels_array.forEach(item=>{
+        if(item.key!==''){
+          this.matchLabels[item.key]=item.value
+        }
+      })
+
+    },
+    unParseSlice(){  //把对象 解析为数组， 常用于编辑状态
+      this.matchLabels_array=[]
+      for(var key in this.matchLabels){
+        this.matchLabels_array.push({key,value:this.matchLabels[key]})
       }
     }
+  },
+  watch:{
+    data:{
+      handler:function(newVal,oldVal) {
+        this.matchLabels=newVal
+        this.unParseSlice()
+      },
+      deep: true
+    },
+    matchLabels:{
+      handler(newVal,oldVal){
+        this.$emit("update:data",newVal)
+      },
+      deep:true
+    }
   }
+}
 </script>

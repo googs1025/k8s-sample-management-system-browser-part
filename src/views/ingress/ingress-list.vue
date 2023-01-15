@@ -1,5 +1,13 @@
 <template>
   <div class="app-container">
+    <div>
+      namespace:
+      <el-select placeholder="选择命名空间" @change="changeNs" v-model="namespace">
+        <el-option v-for="ns in nslist "
+                   :label="ns.Name"
+                   :value="ns.Name"/>
+      </el-select>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -40,23 +48,34 @@
 <script>
 import { getList } from '@/api/ingress'
 import { NewClient } from "@/utils/ws";
+import {getList as getNsList} from "@/api/ns";
 
 export default {
   data() {
     return {
       list: null,
       listLoading: true,
-      wsClient:null
+      wsClient:null,
+      nslist:[] , //ns列表
+      namespace: 'default'
     }
   },
   created() {
     this.fetchData()
+    getNsList().then(rsp=>{
+      this.nslist=rsp.data
+    })
   },
   methods: {
+    changeNs(ns){
+      getList(ns).then(rsp=>{
+        this.list=rsp.data
+      })
+    },
     fetchData() {
       this.listLoading = true
       // 通过rest api 获取
-      getList("default").then(response => {
+      getList(this.namespace).then(response => {
         this.list = response.data
         this.listLoading = false
       })
@@ -64,7 +83,7 @@ export default {
       this.wsClient.onmessage = (e)=>{
         if(e.data !== 'ping'){
           const object=JSON.parse(e.data)
-          if(object.type === 'ingress'){
+          if(object.type === 'ingress'&& object.result.ns===this.namespace){
             this.list = object.result.data
             this.$forceUpdate()
           }
@@ -72,17 +91,6 @@ export default {
       }
 
     },
-    getStatus(row){
-      if(row.IsComplete)
-        return "<span class='green'>Active</span>"
-      return "<span class='red'>Waiting</span>"
-    },
-    getMessage(row){
-      if(!row.IsComplete){
-        return row.Message
-      }
-      return ''
-    }
   },
 
 }
