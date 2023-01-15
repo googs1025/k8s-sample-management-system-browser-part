@@ -11,26 +11,28 @@
           </el-switch>
        </span>
       </div>
-      <MetaDataConfig ref="metaData" @Update="UpdateObject"></MetaDataConfig>
-      <SpecConfig ref="specData" @Update="UpdateObject"></SpecConfig>
+
+      <MetaDataConfig :data.sync="deployment.metadata"  :tips="tips"></MetaDataConfig>
+      <SpecConfig  :data.sync="deployment.spec"   :tips="tips"></SpecConfig>
     </el-card>
     <div>
       <DeployYaml :deployment="deployment" />
     </div>
     <div style="text-align: center;margin-top: 20px">
-      <el-button type="primary"  >保存</el-button>
+      <el-button type="primary"  @click="postDeploy" >保存</el-button>
     </div>
   </div>
 </template>
 <script>
 import DeployYaml from  './deployment-yaml'
-import {loadDeploy} from "@/api/deployments";
+import {loadDeploy,createDeploy} from "@/api/deployments";
+import {clearEmptyObject} from "@/utils/helper";
 
 export default {
   data(){
     return {
       deployment:{ apiVersion:'apps/v1',Kind:'Deployment',
-        metadata:{name:'',namespace:'default'},},
+        metadata:{}},
       tips:false,
       isUpdate: false
     }
@@ -42,20 +44,20 @@ export default {
       loadDeploy(ns,name).then(rsp=>{
         this.deployment=rsp.data
         this.isUpdate=true
-        this.$refs.metaData.setObject(this.deployment.metadata)
-        this.$refs.specData.setObject(this.deployment.spec)
+
       })
     }
   },
   methods:{
-    UpdateObject(key,value){
-      this.$set(this.deployment,key,value)
 
-
-    },
-    postNew(){ //新增ingress
-
+    postDeploy(){ //新增ingress
+      createDeploy(clearEmptyObject(this.deployment)).then(rsp=>{
+        alert("成功")
+      })
     }
+  },
+  watch:{
+
   },
   components:{
     DeployYaml,
@@ -66,3 +68,10 @@ export default {
 }
 
 </script>
+<style>
+.el-card__header{
+  padding-top:10px;
+  padding-bottom: 10px;
+}
+.el-card__body{padding: 10px}
+</style>
