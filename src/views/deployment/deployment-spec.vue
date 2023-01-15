@@ -11,9 +11,9 @@
               <el-input-number v-model="spec.replicas"  :min="1" :max="20" label="副本数"></el-input-number>
               <span v-show="tips">deployment重要特性，来控制正常运行时pod的数量和期望保持一致</span>
             </el-form-item>
-            <MatchLabels :data.sync="spec.selector.matchLabels" :tips="tips"/>
-            <MatchExprs :data.sync="spec.selector.matchExpressions" :tips="tips"/>
-            <TplConfig :data.sync="spec.template" :tips="tips"/>
+            <MatchLabels v-show="!fastmod" :data.sync="spec.selector.matchLabels" :tips="tips"/>
+            <MatchExprs v-show="!fastmod" :data.sync="spec.selector.matchExpressions" :tips="tips"/>
+            <TplConfig :fastmod="fastmod" :data.sync="spec.template" :tips="tips"/>
           </el-form>
 
         </div>
@@ -29,7 +29,7 @@ function copyObject(obj){
   return JSON.parse(str)
 }
 export default {
-  props:["data","tips"],
+  props:["data","tips","fastmod"],
   data(){
     return {
       spec:{replicas:1,selector:{}, },//

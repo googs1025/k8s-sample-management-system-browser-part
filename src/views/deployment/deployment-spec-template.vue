@@ -8,14 +8,14 @@
         <div>
           <el-form   >
             <el-form-item  >
-              <MetaData labels="true" :data.sync="template.metadata" :tips="tips"/>
+              <MetaData v-show="!fastmod" labels="true" :data.sync="template.metadata" :tips="tips"/>
             </el-form-item>
-            <el-form-item>
+            <el-form-item v-show="!fastmod">
               <Container defaultname="init" title="Init容器" :data.sync="template.spec.initContainers" :tips="tips"/>
               <span v-show="tips">(Init 容器是一种特殊容器，在 Pod 内的应用容器启动之前运行)</span>
             </el-form-item>
             <el-form-item>
-              <Container defaultname="container" title="业务容器" :data.sync="template.spec.containers" :tips="tips"/>
+              <Container :fastmod="fastmod" defaultname="container" title="业务容器" :data.sync="template.spec.containers" :tips="tips"/>
             </el-form-item>
           </el-form>
 
@@ -33,7 +33,7 @@ function copyObject(obj){
   return JSON.parse(str)
 }
 export default {
-  props:["data","tips"],
+  props:["data","tips","fastmod"],
   data(){
     return {
       template:{metadata:{},spec:{containers:[]},},//

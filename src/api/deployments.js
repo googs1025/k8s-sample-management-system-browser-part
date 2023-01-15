@@ -33,3 +33,18 @@ export function createDeploy(data,fast) {
     method: 'post',
   })
 }
+
+// 修改模式与创建相同，只是增加一个update=1的query参数过去
+export function updateDeploy(data,fast) {
+  let url='/deployments'
+  if(fast){
+    url+="?fast=1&update=1"
+  }else{
+    url+="?update=1"
+  }
+  return request({
+    url,
+    data,
+    method: 'post',
+  })
+}

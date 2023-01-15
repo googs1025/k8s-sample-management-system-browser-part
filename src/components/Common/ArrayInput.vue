@@ -31,7 +31,7 @@ export default {
       //单引号和双引号 里面的内容 不做 split
       var str=this.text
       str=str.replace(/^\s+|\s+$/gm,'')  //实现trim
-      var pattern =/[\"|'](.*?)[\"|']/gi;
+      var pattern =/'(.*?)'|"(.*?)"/gi;
       var mList=str.match(pattern)
       if(!mList || mList.length===0){
         str=str.replace(/\s+/g,' ')
