@@ -21,9 +21,14 @@ export function rmDeploy(ns,name) {
     method: 'delete',
   })
 }
-export function createDeploy(data) {
+
+export function createDeploy(data,fast) {
+  let url='/deployments'
+  if(fast){
+    url+="?fast=1"
+  }
   return request({
-    url: '/deployments',
+    url,
     data,
     method: 'post',
   })

@@ -32,7 +32,7 @@ export default {
   props:["data","tips"],
   data(){
     return {
-      spec:{replicas:1,selector:{},template:{}},//
+      spec:{replicas:1,selector:{}, },//
       expand: true,
     }
   },
@@ -47,6 +47,7 @@ export default {
     data:{
       handler:function(newVal,oldVal) {
         this.spec=newVal
+
       },
       deep: true
     },

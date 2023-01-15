@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     changeNs(ns){
-      getList(ns).then(rsp=>{
+      getCronJobList(ns).then(rsp=>{
         this.list=rsp.data
       })
     },

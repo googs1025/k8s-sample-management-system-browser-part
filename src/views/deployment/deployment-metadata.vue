@@ -40,7 +40,7 @@
   </div>
 </template>
 <script>
-import { getList  as getNsList } from '@/api/ns'
+import { getList as getNsList } from '@/api/ns'
 function copyObject(obj){
   var str=JSON.stringify(obj)
   return JSON.parse(str)
@@ -102,6 +102,7 @@ export default {
   watch:{
     data:{
       handler:function(newVal,oldVal) {
+
         this.metadata=newVal
         this.unParseLabel()
       },
@@ -114,7 +115,6 @@ export default {
           delete newVal.namespace
 
         }
-        console.log(newVal)
         this.$emit("update:data",newVal)
 
 
