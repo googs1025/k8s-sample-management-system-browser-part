@@ -31,7 +31,7 @@
 </template>
 <script>
 import DeployYaml from  './deployment-yaml'
-import {loadDeploy,createDeploy} from "@/api/deployments";
+import {loadDeploy,createDeploy,updateDeploy} from "@/api/deployments";
 import {clearEmptyObject} from "@/utils/helper";
 
 export default {
@@ -58,7 +58,11 @@ export default {
   methods:{
 
     postDeploy(){ //新增ingress
-      createDeploy(clearEmptyObject(this.deployment),this.fastmod).then(rsp=>{
+      const operatorFunc=this.isUpdate?updateDeploy:createDeploy
+      // console.log(this.deployment.spec.template.spec.containers[0])
+      const cleardObject=clearEmptyObject(this.deployment)
+      console.log(cleardObject)
+      operatorFunc(cleardObject,this.fastmod).then(rsp=>{
         alert("成功")
         this.$router.push({name:"Deployments"})
       })

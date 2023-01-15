@@ -30,7 +30,7 @@
       <el-table-column label="名称" width="350">
         <template slot-scope="scope">
           <p>
-            <router-link :to="{name:'Createdeploy',params:{ns:scope.row.NameSpace,name:scope.row.Name}}">{{ scope.row.Name }}</router-link></p>
+            <router-link :to="{name:'Deploydetail',params:{ns:scope.row.NameSpace,name:scope.row.Name}}">{{ scope.row.Name }}</router-link></p>
           <p class="red">{{ getMessage(scope.row) }}</p>
         </template>
       </el-table-column>
@@ -55,7 +55,9 @@
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
-          <el-button type="danger" @click="()=>delDeploy(scope.row.NameSpace,scope.row.Name )" icon="el-icon-delete" circle></el-button>
+          <router-link :to="{name:'Createdeploy',params:{ns:scope.row.NameSpace,name:scope.row.Name}}"><i class="el-icon-edit" style="font-size: 18px"></i></router-link>
+          <i class="el-icon-delete " style="cursor:pointer;font-size: 18px;margin-left: 10px" @click="()=>delDeploy(scope.row.NameSpace,scope.row.Name )"></i>
+
         </template>
       </el-table-column>
     </el-table>
@@ -65,7 +67,7 @@
 <script>
 import { getList,rmDeploy } from '@/api/deployments'
 import { NewClient } from "@/utils/ws";
-import { getList as getNsList } from '@/api/ns'
+import { getList  as getNsList } from '@/api/ns'
 export default {
   data() {
     return {

@@ -48,3 +48,11 @@ export function updateDeploy(data,fast) {
     method: 'post',
   })
 }
+
+// 获取deploy下的所有pods列表
+export function loadDeployPods(ns,name) {
+  return request({
+    url: '/deployments-pods/' + ns+"/"+name,
+    method: 'get',
+  })
+}
